@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/service";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 function generateOrderNumber(): string {
   const num = String(Math.floor(Math.random() * 9000) + 1000).padStart(4, "0");
   return `WOTL-${num}`;
@@ -89,6 +87,7 @@ export async function POST(req: NextRequest) {
 
     // 4. Send confirmation email
     try {
+      const resend = new Resend(process.env.RESEND_API_KEY);
       await resend.emails.send({
         from: "Witch on the Loose <orders@witchontheloose.com>",
         to: customerEmail,
