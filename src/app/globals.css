@@ -1,0 +1,113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --burnt: #C75B28;
+    --magic: #8B5CF6;
+    --moss: #7D8B6F;
+    --cream: #FAF7F2;
+    --ink: #1A1A1A;
+    --mushroom: #C41E3A;
+    --gold: #D4A853;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-cream text-ink font-sans antialiased;
+  }
+
+  h1, h2, h3 {
+    @apply font-display;
+  }
+
+  h4, h5, h6 {
+    @apply font-serif;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-full
+           bg-magic text-white font-sans font-semibold text-sm
+           hover:bg-magic-600 transition-colors duration-200
+           focus:outline-none focus:ring-2 focus:ring-magic focus:ring-offset-2;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-full
+           bg-transparent text-burnt border-2 border-burnt font-sans font-semibold text-sm
+           hover:bg-burnt hover:text-white transition-colors duration-200
+           focus:outline-none focus:ring-2 focus:ring-burnt focus:ring-offset-2;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-full
+           bg-transparent text-ink font-sans font-medium text-sm
+           hover:bg-moss/10 transition-colors duration-200;
+  }
+
+  .card {
+    @apply bg-white rounded-2xl shadow-sm border border-moss/10 overflow-hidden;
+  }
+
+  .badge-one-of-one {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+           bg-magic/10 text-magic-700 border border-magic/20;
+  }
+
+  .badge-sold {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+           bg-ink/10 text-ink/60;
+  }
+
+  .section-heading {
+    @apply text-4xl md:text-5xl text-burnt mb-4;
+  }
+
+  .section-subheading {
+    @apply text-lg text-ink/60 font-serif italic;
+  }
+
+  .container-site {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+}
+
+/* Sparkle pseudo-elements for witchy flair */
+.sparkle-border {
+  position: relative;
+}
+
+.sparkle-border::before {
+  content: '✦';
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--gold);
+  font-size: 14px;
+  line-height: 1;
+}
+
+/* Product image hover zoom */
+.product-image-wrapper {
+  overflow: hidden;
+}
+
+.product-image-wrapper img {
+  transition: transform 0.4s ease;
+}
+
+.product-image-wrapper:hover img {
+  transform: scale(1.05);
+}
+
+/* Sold overlay */
+.sold-overlay {
+  @apply absolute inset-0 bg-ink/40 flex items-center justify-center;
+}
