@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/service";
 import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
     const paymentId: string = squareData.payment.id;
 
     // 2. Create order in Supabase
-    const supabase = createClient();
+    const supabase = createServiceClient();
     const orderNumber = generateOrderNumber();
 
     const { error: orderError } = await supabase.from("orders").insert({
