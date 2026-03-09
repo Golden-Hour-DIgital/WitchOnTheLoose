@@ -42,6 +42,14 @@ const categories = [
     bg: "bg-magic/10",
     border: "border-magic/20",
   },
+  {
+    href: "/shop/vintage",
+    label: "Vintage",
+    description: "Curated secondhand finds",
+    emoji: "✦",
+    bg: "bg-gold/10",
+    border: "border-gold/30",
+  },
 ];
 
 export default async function HomePage() {

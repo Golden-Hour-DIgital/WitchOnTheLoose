@@ -11,6 +11,7 @@ const navLinks = [
   { href: "/shop/clothing", label: "Clothing" },
   { href: "/shop/leather", label: "Leather Goods" },
   { href: "/shop/herbals", label: "Herbals" },
+  { href: "/shop/vintage", label: "Vintage" },
   { href: "/about", label: "About" },
   { href: "/blog", label: "Blog" },
   { href: "/contact", label: "Contact" },

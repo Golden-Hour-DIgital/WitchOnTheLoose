@@ -25,6 +25,7 @@ const categoryOptions = [
   { value: "clothing", label: "Clothing" },
   { value: "leather", label: "Leather Goods" },
   { value: "herbals", label: "Herbals" },
+  { value: "vintage", label: "Vintage" },
 ];
 
 export default function ShopFilters({ showCategoryFilter = true }: ShopFiltersProps) {

@@ -1,5 +1,5 @@
 export type ProductStatus = "available" | "sold" | "hidden";
-export type ProductCategory = "clothing" | "leather" | "herbals";
+export type ProductCategory = "clothing" | "leather" | "herbals" | "vintage";
 export type OrderStatus = "pending" | "paid" | "shipped" | "delivered" | "cancelled";
 export type BlogPostStatus = "draft" | "published";
 

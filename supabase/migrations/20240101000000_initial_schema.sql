@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS products (
     description TEXT NOT NULL DEFAULT '',
     price DECIMAL(10, 2) NOT NULL,
     compare_at_price DECIMAL(10, 2),
-    category TEXT NOT NULL CHECK (category IN ('clothing', 'leather', 'herbals')),
+    category TEXT NOT NULL CHECK (category IN ('clothing', 'leather', 'herbals', 'vintage')),
     images JSONB NOT NULL DEFAULT '[]',
     featured_image TEXT NOT NULL DEFAULT '',
     status TEXT NOT NULL DEFAULT 'available' CHECK (status IN ('available', 'sold', 'hidden')),
