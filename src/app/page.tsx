@@ -3,7 +3,6 @@ import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
 import ProductGrid from "@/components/product/ProductGrid";
 import Button from "@/components/ui/Button";
-import WitchHero from "@/components/ui/WitchHero";
 import type { Product } from "@/types";
 
 async function getFeaturedProducts(): Promise<Product[]> {
@@ -59,17 +58,21 @@ export default async function HomePage() {
   return (
     <div className="animate-fade-in">
       {/* ─── Hero ─── */}
-      <section className="relative bg-burnt overflow-hidden cursor-crosshair">
-        {/* GSAP witch + sparkle canvas */}
-        <WitchHero />
+      <section className="relative overflow-hidden bg-ink">
+        {/* Background video */}
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="none"
+          className="absolute inset-0 w-full h-full object-cover z-0"
+        >
+          <source src="/videos/witch-flying.mp4" type="video/mp4" />
+        </video>
 
-        {/* Decorative background pattern */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-10 left-10 text-cream text-8xl font-display rotate-12">✦</div>
-          <div className="absolute top-1/3 right-16 text-cream text-6xl font-display -rotate-6">✦</div>
-          <div className="absolute bottom-16 left-1/4 text-cream text-5xl font-display rotate-45">✦</div>
-          <div className="absolute bottom-8 right-1/3 text-cream text-7xl font-display -rotate-12">✦</div>
-        </div>
+        {/* Dark overlay so text stays readable */}
+        <div className="absolute inset-0 bg-black/55 z-10" />
 
         <div className="container-site py-24 md:py-36 relative z-20">
           <div className="max-w-2xl">

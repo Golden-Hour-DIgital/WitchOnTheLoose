@@ -17,8 +17,7 @@
     "resend": "^3",
     "lucide-react": "^0.400.0",
     "clsx": "^2",
-    "tailwind-merge": "^2",
-    "gsap": "^3.12.5"
+    "tailwind-merge": "^2"
   },
   "devDependencies": {
     "typescript": "^5",
