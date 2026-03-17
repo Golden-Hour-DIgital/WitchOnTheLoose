@@ -3,6 +3,7 @@ import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
 import ProductGrid from "@/components/product/ProductGrid";
 import Button from "@/components/ui/Button";
+import WitchHero from "@/components/ui/WitchHero";
 import type { Product } from "@/types";
 
 async function getFeaturedProducts(): Promise<Product[]> {
@@ -58,7 +59,10 @@ export default async function HomePage() {
   return (
     <div className="animate-fade-in">
       {/* ─── Hero ─── */}
-      <section className="relative bg-burnt overflow-hidden">
+      <section className="relative bg-burnt overflow-hidden cursor-crosshair">
+        {/* GSAP witch + sparkle canvas */}
+        <WitchHero />
+
         {/* Decorative background pattern */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-10 left-10 text-cream text-8xl font-display rotate-12">✦</div>
@@ -67,7 +71,7 @@ export default async function HomePage() {
           <div className="absolute bottom-8 right-1/3 text-cream text-7xl font-display -rotate-12">✦</div>
         </div>
 
-        <div className="container-site py-24 md:py-36 relative">
+        <div className="container-site py-24 md:py-36 relative z-20">
           <div className="max-w-2xl">
             <p className="font-serif italic text-cream/70 text-lg mb-4 tracking-wide">
               One of a kind. Always.
