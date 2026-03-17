@@ -169,8 +169,9 @@ export default function WitchHero() {
 
     // ── Click bursts (on the hero section) ───────────────────────
     const heroEl = canvas.parentElement;
+    const capturedCanvas = canvas;
     function handleClick(e: MouseEvent) {
-      const rect = canvas.getBoundingClientRect();
+      const rect = capturedCanvas.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
       spawnClickBurst(x, y);
