@@ -86,5 +86,5 @@ export interface ContactMessage {
 
 // Cart types
 export interface CartItem {
-  product: Pick<Product, "id" | "name" | "slug" | "price" | "featured_image" | "status">;
+  product: Pick<Product, "id" | "name" | "slug" | "price" | "featured_image" | "status" | "is_taxable">;
 }

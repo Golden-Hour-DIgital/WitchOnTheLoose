@@ -24,6 +24,7 @@ export default function AddToCartButton({ product, size = "md", fullWidth }: Add
         price: product.price,
         featured_image: product.featured_image,
         status: product.status,
+        is_taxable: product.is_taxable,
       },
     });
   };
