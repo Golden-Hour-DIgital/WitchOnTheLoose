@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/service";
+import { calculateTax } from "@/lib/tax";
 import { Resend } from "resend";
 
 function generateOrderNumber(): string {
@@ -10,20 +11,54 @@ function generateOrderNumber(): string {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
+    // Only these fields are trusted from the client. subtotal/shipping/tax/total/amount
+    // are intentionally ignored — the server recomputes them below.
     const {
       sourceId,
-      amount,
       items,
-      subtotal,
-      shipping,
-      tax,
-      total,
+      shippingAddress,
       customerEmail,
       customerName,
-      shippingAddress,
     } = body;
 
-    // 1. Process payment with Square
+    // 1. Validate cart
+    if (!Array.isArray(items) || items.length === 0) {
+      return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
+    }
+
+    // 2. Fetch products from DB (service client bypasses RLS)
+    const supabase = createServiceClient();
+    const productIds = items.map((i: { product_id: string }) => i.product_id);
+
+    const { data: products, error: pErr } = await supabase
+      .from("products")
+      .select("id, name, slug, price, featured_image, status, is_taxable")
+      .in("id", productIds);
+
+    if (pErr || !products || products.length !== items.length) {
+      return NextResponse.json({ error: "Invalid cart" }, { status: 400 });
+    }
+
+    // 3. Reject if any product is no longer available
+    const soldOut = products.find((p) => p.status !== "available");
+    if (soldOut) {
+      return NextResponse.json(
+        { error: `${soldOut.name} has already been sold` },
+        { status: 409 }
+      );
+    }
+
+    // 4. Recompute totals server-side — client-supplied numbers are never used
+    const subtotal = products.reduce((sum, p) => sum + Number(p.price), 0);
+    const shipping = 8.0;
+    const tax = calculateTax(
+      products.map((p) => ({ price: Number(p.price), is_taxable: p.is_taxable })),
+      shippingAddress.state
+    );
+    const total = Math.round((subtotal + shipping + tax) * 100) / 100;
+    const amount = Math.round(total * 100); // cents for Square
+
+    // 5. Process payment with Square
     const squareRes = await fetch(
       `${process.env.SQUARE_API_BASE_URL}/v2/payments`,
       {
@@ -55,16 +90,24 @@ export async function POST(req: NextRequest) {
 
     const paymentId: string = squareData.payment.id;
 
-    // 2. Create order in Supabase
-    const supabase = createServiceClient();
+    // 6. Create order in Supabase using server-computed values
     const orderNumber = generateOrderNumber();
+
+    // Build the items JSONB from fetched products, not client data
+    const orderItems = products.map((p) => ({
+      product_id: p.id,
+      name: p.name,
+      price: Number(p.price),
+      featured_image: p.featured_image,
+      slug: p.slug,
+    }));
 
     const { error: orderError } = await supabase.from("orders").insert({
       order_number: orderNumber,
       customer_email: customerEmail,
       customer_name: customerName,
       shipping_address: shippingAddress,
-      items,
+      items: orderItems,
       subtotal,
       shipping_cost: shipping,
       tax,
@@ -78,21 +121,17 @@ export async function POST(req: NextRequest) {
       // Don't fail the request — payment succeeded, investigate manually
     }
 
-    // 3. Mark products as sold
-    const productIds = items.map((i: { product_id: string }) => i.product_id);
-    await supabase
-      .from("products")
-      .update({ status: "sold" })
-      .in("id", productIds);
+    // 7. Mark products as sold
+    await supabase.from("products").update({ status: "sold" }).in("id", productIds);
 
-    // 4. Send confirmation email
+    // 8. Send confirmation email
     try {
       const resend = new Resend(process.env.RESEND_API_KEY);
       await resend.emails.send({
         from: "Witch on the Loose <orders@witchontheloose.com>",
         to: customerEmail,
         subject: `Order Confirmed — ${orderNumber}`,
-        html: buildOrderEmail({ orderNumber, customerName, items, subtotal, shipping, tax, total }),
+        html: buildOrderEmail({ orderNumber, customerName, items: orderItems, subtotal, shipping, tax, total }),
       });
     } catch (emailErr) {
       console.error("Email send failed:", emailErr);
