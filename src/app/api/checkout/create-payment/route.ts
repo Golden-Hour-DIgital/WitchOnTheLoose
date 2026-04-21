@@ -26,6 +26,14 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
     }
 
+    if (
+      typeof sourceId !== "string" || !sourceId ||
+      typeof customerEmail !== "string" || !customerEmail ||
+      typeof customerName !== "string" || !customerName
+    ) {
+      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    }
+
     // 2. Fetch products from DB (service client bypasses RLS)
     const supabase = createServiceClient();
     const productIds = items.map((i: { product_id: string }) => i.product_id);
@@ -36,6 +44,7 @@ export async function POST(req: NextRequest) {
       .in("id", productIds);
 
     if (pErr || !products || products.length !== items.length) {
+      if (pErr) console.error("Product fetch error:", pErr);
       return NextResponse.json({ error: "Invalid cart" }, { status: 400 });
     }
 
@@ -46,6 +55,11 @@ export async function POST(req: NextRequest) {
         { error: `${soldOut.name} has already been sold` },
         { status: 409 }
       );
+    }
+
+    // 3b. Validate shipping address before tax computation
+    if (!shippingAddress?.state || typeof shippingAddress.state !== "string") {
+      return NextResponse.json({ error: "Invalid shipping address" }, { status: 400 });
     }
 
     // 4. Recompute totals server-side — client-supplied numbers are never used
@@ -84,6 +98,7 @@ export async function POST(req: NextRequest) {
     const squareData = await squareRes.json();
 
     if (!squareRes.ok || squareData.errors) {
+      console.error("Square error:", squareData.errors);
       const msg = squareData.errors?.[0]?.detail ?? "Payment failed";
       return NextResponse.json({ error: msg }, { status: 400 });
     }
