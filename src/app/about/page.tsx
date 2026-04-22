@@ -21,13 +21,14 @@ export default function AboutPage() {
       {/* Main content */}
       <div className="container-site py-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-          {/* Image placeholder */}
+          {/* TODO(client): replace star placeholder with <Image src="/images/about-founder.jpg" fill /> once client sends headshot */}
           <div className="rounded-2xl aspect-[4/5] bg-moss/10 flex items-center justify-center sticky top-24">
             <span className="text-moss/30 text-8xl">✦</span>
           </div>
 
           {/* Story */}
           <div className="space-y-6 font-sans text-ink/80 leading-relaxed">
+            {/* TODO(client): replace [Name] with client's actual name */}
             <h2 className="font-display text-4xl text-burnt">Hi, I&apos;m [Name]</h2>
             <p>
               I started Witch on the Loose because I couldn&apos;t find the things I wanted to wear
