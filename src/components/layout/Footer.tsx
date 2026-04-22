@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Instagram, Facebook } from "lucide-react";
+import { Instagram, Facebook, ShoppingBag } from "lucide-react";
 
 const shopLinks = [
   { href: "/shop", label: "All Products" },
@@ -44,13 +44,32 @@ export default function Footer() {
                 <Instagram size={18} />
               </a>
               <a
-                href="#"
+                href="https://www.facebook.com/profile.php?id=61585318041301"
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label="Facebook"
                 className="p-2 rounded-full bg-cream/10 hover:bg-cream/20 transition-colors duration-150"
               >
                 <Facebook size={18} />
               </a>
+              <a
+                href="https://posh.mk/JEZB1hkOc2b"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Shop on Poshmark"
+                className="p-2 rounded-full bg-cream/10 hover:bg-cream/20 transition-colors duration-150"
+              >
+                <ShoppingBag size={18} />
+              </a>
             </div>
+            <a
+              href="https://posh.mk/JEZB1hkOc2b"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block mt-3 text-xs text-cream/50 hover:text-cream font-serif italic"
+            >
+              Also shop on Poshmark ↗
+            </a>
           </div>
 
           {/* Shop */}
