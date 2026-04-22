@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { createServiceClient } from "@/lib/supabase/service";
 import Button from "@/components/ui/Button";
+import { BlogPostRowActions } from "@/app/admin/_components/BlogPostRowActions";
+import type { BlogPostStatus } from "@/types";
 
 export const dynamic = "force-dynamic";
 
@@ -22,6 +24,7 @@ export default async function AdminBlogPage() {
               <th className="text-left py-3 px-4">Title</th>
               <th className="text-left py-3 px-4">Status</th>
               <th className="text-right py-3 px-4">Published</th>
+              <th className="text-right py-3 px-4">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-moss/10">
@@ -34,10 +37,18 @@ export default async function AdminBlogPage() {
                 <td className="py-3 px-4 text-right text-ink/50 text-xs">
                   {p.published_at ? new Date(p.published_at).toLocaleDateString() : "—"}
                 </td>
+                <td className="py-3 px-4 text-right">
+                  <BlogPostRowActions
+                    id={p.id}
+                    title={p.title}
+                    status={p.status as BlogPostStatus}
+                    publishedAt={p.published_at}
+                  />
+                </td>
               </tr>
             ))}
             {!posts?.length && (
-              <tr><td colSpan={3} className="py-10 text-center text-ink/50 font-serif italic">No posts yet.</td></tr>
+              <tr><td colSpan={4} className="py-10 text-center text-ink/50 font-serif italic">No posts yet.</td></tr>
             )}
           </tbody>
         </table>
