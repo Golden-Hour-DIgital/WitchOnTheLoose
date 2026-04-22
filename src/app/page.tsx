@@ -176,20 +176,24 @@ export default async function HomePage() {
         <div className="container-site text-center">
           <h2 className="font-display text-4xl text-cream mb-3">Follow the Magic</h2>
           <p className="font-serif italic text-cream/60 mb-8">
-            New pieces drop on Instagram first.
+            New pieces drop on Facebook first. Also find pieces on Poshmark.
           </p>
-          <div className="flex justify-center gap-4">
+          <div className="flex justify-center gap-4 flex-wrap">
             <a
-              href="#"
+              href="https://www.facebook.com/profile.php?id=61585318041301"
+              target="_blank"
+              rel="noopener noreferrer"
               className="btn-primary bg-magic hover:bg-magic-600 text-white"
             >
-              Instagram
+              Facebook
             </a>
             <a
-              href="#"
+              href="https://posh.mk/JEZB1hkOc2b"
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center justify-center px-6 py-3 rounded-full border border-cream/20 text-cream hover:bg-cream/10 transition-colors duration-200 font-sans font-semibold text-sm"
             >
-              Facebook
+              Poshmark
             </a>
           </div>
         </div>

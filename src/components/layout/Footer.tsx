@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Instagram, Facebook, ShoppingBag } from "lucide-react";
+import { Facebook, ShoppingBag } from "lucide-react";
 
 const shopLinks = [
   { href: "/shop", label: "All Products" },
@@ -36,13 +36,6 @@ export default function Footer() {
               Each piece is unique &mdash; when it&apos;s gone, it&apos;s gone.
             </p>
             <div className="flex gap-3 mt-5">
-              <a
-                href="#"
-                aria-label="Instagram"
-                className="p-2 rounded-full bg-cream/10 hover:bg-cream/20 transition-colors duration-150"
-              >
-                <Instagram size={18} />
-              </a>
               <a
                 href="https://www.facebook.com/profile.php?id=61585318041301"
                 target="_blank"
