@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/lib/cart-context";
+import { calculateTax } from "@/lib/tax";
 import { formatPrice } from "@/lib/utils";
 import Button from "@/components/ui/Button";
 import type { ShippingAddress } from "@/types";
@@ -21,7 +22,6 @@ declare global {
 }
 
 const SHIPPING_FLAT = 8.00;
-const TAX_RATE = 0.08; // 8% — adjust per state
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -43,7 +43,11 @@ export default function CheckoutPage() {
   });
 
   const shipping = SHIPPING_FLAT;
-  const tax = subtotal * TAX_RATE;
+  const taxableItems = items.map((i) => ({
+    price: i.product.price,
+    is_taxable: i.product.is_taxable,
+  }));
+  const tax = calculateTax(taxableItems, form.state);
   const total = subtotal + shipping + tax;
 
   // Redirect if cart empty

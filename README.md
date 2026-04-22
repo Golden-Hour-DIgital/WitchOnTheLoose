@@ -102,9 +102,37 @@ For production, update `NEXT_PUBLIC_SQUARE_ENV=production` and `SQUARE_API_BASE_
 
 ## Content Management
 
-All content is managed via the Supabase dashboard directly (MVP).
+All content is managed through the admin portal at `/admin`.
 
-- **Products:** `products` table — add/edit/mark as sold
-- **Blog posts:** `blog_posts` table — set `status='published'` and `published_at` to go live
-- **Orders:** `orders` table — view orders, update status and tracking numbers
-- **Messages:** `contact_messages` table — view incoming contact form submissions
+1. Add your email to the `ADMIN_EMAILS` environment variable (comma-separated for multiple admins).
+2. Visit `/admin/login`, request a magic link, click the link in your email.
+3. From the dashboard:
+   - **Products** — add, edit, mark sold, set featured. Check **"Taxable in PA"** for leather accessories, jewelry, cosmetics. Leave unchecked for clothing and vintage clothing (PA exempts them).
+   - **Orders** — see new orders, copy the shipping address for Pirate Ship, paste tracking numbers back. Setting status to "shipped" with a tracking number emails the customer.
+   - **Blog** — write posts in Markdown, toggle draft/published.
+   - **Messages** — contact-form submissions, reply by email.
+
+Supabase dashboard access is no longer needed for day-to-day content. Keep it as a backup.
+
+## Tax Notes (Pennsylvania)
+
+- The site charges 6% sales tax on orders shipped to a PA address — but **only on products marked `is_taxable`**.
+- PA exempts most clothing and vintage clothing — leave those unchecked.
+- Leather accessories, jewelry, cosmetics, and non-food herbals are typically taxable.
+- You must have a PA Sales Tax License (free, via myPATH at revenue.pa.gov) before the site starts collecting tax. Until then, toggle `is_taxable` off on all products.
+- Philadelphia adds 2% local, Allegheny adds 1%. Current setup uses statewide 6% only. Revisit if she registers for local licenses.
+
+## Production Checklist
+
+Before flipping to production:
+
+- [ ] Square: switch `NEXT_PUBLIC_SQUARE_ENV=production` and `SQUARE_API_BASE_URL=https://connect.squareup.com`; use production App ID / Location ID / Access Token.
+- [ ] Resend: add SPF, DKIM, DMARC DNS records on `witchontheloose.com`; verify the `orders@witchontheloose.com` sender.
+- [ ] Supabase Auth: Site URL and Redirect URLs include the production domain (`https://www.witchontheloose.com/admin`).
+- [ ] `NEXT_PUBLIC_SITE_URL=https://www.witchontheloose.com`.
+- [ ] `ADMIN_EMAILS` = the owner's real email(s).
+- [ ] PA Sales Tax License obtained; `is_taxable` set correctly on every product.
+- [ ] About page: real name swapped in for `[Name]`; headshot uploaded to `public/images/about-founder.jpg` and the placeholder `<span>✦</span>` replaced with `<Image>`.
+- [ ] Hero video `public/videos/witch-flying.mp4` present.
+- [ ] Vercel project has all env vars set for the Production environment.
+- [ ] Run a real low-value purchase end-to-end before announcing launch.

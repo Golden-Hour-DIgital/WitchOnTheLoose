@@ -16,6 +16,7 @@ export interface Product {
   status: ProductStatus;
   is_one_of_one: boolean;
   is_featured: boolean;
+  is_taxable: boolean;
   materials: string | null;
   dimensions: string | null;
   care_instructions: string | null;
@@ -85,5 +86,5 @@ export interface ContactMessage {
 
 // Cart types
 export interface CartItem {
-  product: Pick<Product, "id" | "name" | "slug" | "price" | "featured_image" | "status">;
+  product: Pick<Product, "id" | "name" | "slug" | "price" | "featured_image" | "status" | "is_taxable">;
 }
