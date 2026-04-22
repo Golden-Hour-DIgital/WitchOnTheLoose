@@ -11,7 +11,7 @@ interface SearchParams {
 }
 
 async function getProducts(params: SearchParams): Promise<Product[]> {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   let query = supabase.from("products").select("*").neq("status", "hidden");
 
@@ -41,9 +41,10 @@ async function getProducts(params: SearchParams): Promise<Product[]> {
 export default async function ShopPage({
   searchParams,
 }: {
-  searchParams: SearchParams;
+  searchParams: Promise<SearchParams>;
 }) {
-  const products = await getProducts(searchParams);
+  const sp = await searchParams;
+  const products = await getProducts(sp);
 
   const categoryLabel: Record<string, string> = {
     clothing: "Clothing",
@@ -51,8 +52,8 @@ export default async function ShopPage({
     herbals: "Herbals",
   };
 
-  const heading = searchParams.category
-    ? categoryLabel[searchParams.category] ?? "Shop"
+  const heading = sp.category
+    ? categoryLabel[sp.category] ?? "Shop"
     : "Shop All";
 
   return (

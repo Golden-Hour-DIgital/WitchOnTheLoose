@@ -1,10 +1,11 @@
 import { redirect } from "next/navigation";
 
-export default function LeatherPage({
+export default async function LeatherPage({
   searchParams,
 }: {
-  searchParams: Record<string, string>;
+  searchParams: Promise<Record<string, string>>;
 }) {
-  const params = new URLSearchParams({ ...searchParams, category: "leather" });
+  const sp = await searchParams;
+  const params = new URLSearchParams({ ...sp, category: "leather" });
   redirect(`/shop?${params.toString()}`);
 }

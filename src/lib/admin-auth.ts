@@ -18,7 +18,7 @@ export function isAdminEmail(email: string | null | undefined): boolean {
  * otherwise redirects to /admin/login (server components) or throws (use getAdminSessionOrNull for API).
  */
 export async function requireAdmin() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user || !isAdminEmail(user.email)) {
     redirect("/admin/login");
@@ -27,7 +27,7 @@ export async function requireAdmin() {
 }
 
 export async function getAdminUserOrNull() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user || !isAdminEmail(user.email)) return null;
   return user;

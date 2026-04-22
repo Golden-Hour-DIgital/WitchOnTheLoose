@@ -6,15 +6,16 @@ import type { Product } from "@/types";
 
 export const dynamic = "force-dynamic";
 
-export default async function EditProductPage({ params }: { params: { id: string } }) {
+export default async function EditProductPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const supabase = createServiceClient();
-  const { data } = await supabase.from("products").select("*").eq("id", params.id).single();
+  const { data } = await supabase.from("products").select("*").eq("id", id).single();
   if (!data) notFound();
   return (
     <div className="space-y-6 animate-fade-in">
       <Link href="/admin/products" className="text-sm text-ink/50 hover:text-magic">← All products</Link>
       <h1 className="section-heading">{data.name}</h1>
-      <ProductForm initial={data as Product} productId={params.id} />
+      <ProductForm initial={data as Product} productId={id} />
     </div>
   );
 }

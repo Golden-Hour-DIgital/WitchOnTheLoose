@@ -9,11 +9,11 @@ import { formatPrice } from "@/lib/utils";
 import type { Product } from "@/types";
 
 interface Props {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 async function getProduct(slug: string): Promise<Product | null> {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data } = await supabase
     .from("products")
     .select("*")
@@ -24,7 +24,7 @@ async function getProduct(slug: string): Promise<Product | null> {
 }
 
 async function getRelated(product: Product): Promise<Product[]> {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data } = await supabase
     .from("products")
     .select("*")
@@ -37,7 +37,8 @@ async function getRelated(product: Product): Promise<Product[]> {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const product = await getProduct(params.slug);
+  const { slug } = await params;
+  const product = await getProduct(slug);
   if (!product) return {};
   return {
     title: product.name,
@@ -49,7 +50,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function ProductPage({ params }: Props) {
-  const product = await getProduct(params.slug);
+  const { slug } = await params;
+  const product = await getProduct(slug);
   if (!product) notFound();
 
   const related = await getRelated(product);

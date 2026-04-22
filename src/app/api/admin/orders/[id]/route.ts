@@ -6,7 +6,8 @@ import type { OrderStatus } from "@/types";
 
 const ALLOWED_STATUSES: OrderStatus[] = ["pending", "paid", "shipped", "delivered", "cancelled"];
 
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const user = await getAdminUserOrNull();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
@@ -25,7 +26,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   const { data: before, error: fetchErr } = await supabase
     .from("orders")
     .select("*")
-    .eq("id", params.id)
+    .eq("id", id)
     .single();
 
   if (fetchErr || !before) {
@@ -37,7 +38,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   if (tracking_number !== undefined) update.tracking_number = tracking_number;
   if (notes !== undefined) update.notes = notes;
 
-  const { error: updErr } = await supabase.from("orders").update(update).eq("id", params.id);
+  const { error: updErr } = await supabase.from("orders").update(update).eq("id", id);
   if (updErr) {
     return NextResponse.json({ error: updErr.message }, { status: 500 });
   }

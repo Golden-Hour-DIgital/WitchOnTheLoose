@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 async function getPosts(): Promise<BlogPost[]> {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data } = await supabase
     .from("blog_posts")
     .select("*")

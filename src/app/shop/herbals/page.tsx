@@ -1,10 +1,11 @@
 import { redirect } from "next/navigation";
 
-export default function HerbalsPage({
+export default async function HerbalsPage({
   searchParams,
 }: {
-  searchParams: Record<string, string>;
+  searchParams: Promise<Record<string, string>>;
 }) {
-  const params = new URLSearchParams({ ...searchParams, category: "herbals" });
+  const sp = await searchParams;
+  const params = new URLSearchParams({ ...sp, category: "herbals" });
   redirect(`/shop?${params.toString()}`);
 }
