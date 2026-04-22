@@ -3,6 +3,8 @@ import Image from "next/image";
 import { createServiceClient } from "@/lib/supabase/service";
 import { formatPrice } from "@/lib/utils";
 import Button from "@/components/ui/Button";
+import { ProductRowActions } from "@/app/admin/_components/ProductRowActions";
+import type { ProductStatus } from "@/types";
 
 export const dynamic = "force-dynamic";
 
@@ -29,6 +31,7 @@ export default async function AdminProductsPage() {
               <th className="text-left py-3 px-4">Status</th>
               <th className="text-left py-3 px-4">Taxable?</th>
               <th className="text-right py-3 px-4">Price</th>
+              <th className="text-right py-3 px-4">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-moss/10">
@@ -52,11 +55,14 @@ export default async function AdminProductsPage() {
                 <td className="py-3 px-4 uppercase text-xs tracking-wider text-ink/60">{p.status}</td>
                 <td className="py-3 px-4 text-ink/70">{p.is_taxable ? "Yes" : "No"}</td>
                 <td className="py-3 px-4 text-right text-ink">{formatPrice(Number(p.price))}</td>
+                <td className="py-3 px-4 text-right">
+                  <ProductRowActions id={p.id} name={p.name} status={p.status as ProductStatus} />
+                </td>
               </tr>
             ))}
             {!products?.length && (
               <tr>
-                <td colSpan={6} className="py-10 text-center text-ink/50 font-serif italic">
+                <td colSpan={7} className="py-10 text-center text-ink/50 font-serif italic">
                   No products yet.
                 </td>
               </tr>
