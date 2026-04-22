@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/service";
 import { calculateTax } from "@/lib/tax";
-import { Resend } from "resend";
+import { sendOrderConfirmation } from "@/lib/resend";
 
 function generateOrderNumber(): string {
   const num = String(Math.floor(Math.random() * 9000) + 1000).padStart(4, "0");
@@ -141,12 +141,15 @@ export async function POST(req: NextRequest) {
 
     // 8. Send confirmation email
     try {
-      const resend = new Resend(process.env.RESEND_API_KEY);
-      await resend.emails.send({
-        from: "Witch on the Loose <orders@witchontheloose.com>",
+      await sendOrderConfirmation({
         to: customerEmail,
-        subject: `Order Confirmed — ${orderNumber}`,
-        html: buildOrderEmail({ orderNumber, customerName, items: orderItems, subtotal, shipping, tax, total }),
+        orderNumber,
+        customerName,
+        items: orderItems.map((i) => ({ name: i.name, price: Number(i.price) })),
+        subtotal,
+        shipping,
+        tax,
+        total,
       });
     } catch (emailErr) {
       console.error("Email send failed:", emailErr);
@@ -157,47 +160,4 @@ export async function POST(req: NextRequest) {
     console.error("Checkout error:", err);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
-}
-
-function buildOrderEmail(params: {
-  orderNumber: string;
-  customerName: string;
-  items: { name: string; price: number }[];
-  subtotal: number;
-  shipping: number;
-  tax: number;
-  total: number;
-}): string {
-  const { orderNumber, customerName, items, subtotal, shipping, tax, total } = params;
-  const fmt = (n: number) =>
-    new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(n);
-
-  const itemsHtml = items
-    .map((i) => `<tr><td>${i.name}</td><td align="right">${fmt(i.price)}</td></tr>`)
-    .join("");
-
-  return `
-<!DOCTYPE html>
-<html>
-<head><meta charset="UTF-8" /></head>
-<body style="font-family:Georgia,serif;max-width:600px;margin:0 auto;padding:24px;color:#1A1A1A;">
-  <h1 style="color:#C75B28;font-family:Georgia,serif;">Witch on the Loose</h1>
-  <p>Hi ${customerName},</p>
-  <p>Your order <strong>${orderNumber}</strong> is confirmed! Thank you for supporting handmade magic.</p>
-  <table width="100%" cellpadding="8" style="border-collapse:collapse;margin:16px 0;">
-    <thead>
-      <tr style="background:#FAF7F2;"><th align="left">Item</th><th align="right">Price</th></tr>
-    </thead>
-    <tbody>${itemsHtml}</tbody>
-    <tfoot>
-      <tr><td>Subtotal</td><td align="right">${fmt(subtotal)}</td></tr>
-      <tr><td>Shipping</td><td align="right">${fmt(shipping)}</td></tr>
-      <tr><td>Tax</td><td align="right">${fmt(tax)}</td></tr>
-      <tr style="font-weight:bold;"><td>Total</td><td align="right">${fmt(total)}</td></tr>
-    </tfoot>
-  </table>
-  <p>Your items will ship within 3–5 business days. You'll receive a tracking number when they're on the way.</p>
-  <p style="color:#8B5CF6;font-style:italic;">With magic &amp; care,<br />Witch on the Loose</p>
-</body>
-</html>`;
 }
