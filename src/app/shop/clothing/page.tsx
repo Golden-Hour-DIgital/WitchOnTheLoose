@@ -1,10 +1,11 @@
 import { redirect } from "next/navigation";
 
-export default function ClothingPage({
+export default async function ClothingPage({
   searchParams,
 }: {
-  searchParams: Record<string, string>;
+  searchParams: Promise<Record<string, string>>;
 }) {
-  const params = new URLSearchParams({ ...searchParams, category: "clothing" });
+  const sp = await searchParams;
+  const params = new URLSearchParams({ ...sp, category: "clothing" });
   redirect(`/shop?${params.toString()}`);
 }

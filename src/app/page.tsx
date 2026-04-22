@@ -6,7 +6,7 @@ import Button from "@/components/ui/Button";
 import type { Product } from "@/types";
 
 async function getFeaturedProducts(): Promise<Product[]> {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data } = await supabase
     .from("products")
     .select("*")

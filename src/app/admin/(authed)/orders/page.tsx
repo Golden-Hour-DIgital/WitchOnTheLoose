@@ -7,17 +7,18 @@ export const dynamic = "force-dynamic";
 export default async function AdminOrdersPage({
   searchParams,
 }: {
-  searchParams: { status?: string };
+  searchParams: Promise<{ status?: string }>;
 }) {
+  const sp = await searchParams;
   const supabase = createServiceClient();
   let query = supabase.from("orders").select("*").order("created_at", { ascending: false });
-  if (searchParams.status && searchParams.status !== "all") {
-    query = query.eq("status", searchParams.status);
+  if (sp.status && sp.status !== "all") {
+    query = query.eq("status", sp.status);
   }
   const { data: orders } = await query;
 
   const statuses = ["all", "paid", "shipped", "delivered", "cancelled"];
-  const active = searchParams.status ?? "all";
+  const active = sp.status ?? "all";
 
   return (
     <div className="space-y-6 animate-fade-in">

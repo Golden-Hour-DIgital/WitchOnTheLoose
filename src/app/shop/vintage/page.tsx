@@ -1,10 +1,11 @@
 import { redirect } from "next/navigation";
 
-export default function VintagePage({
+export default async function VintagePage({
   searchParams,
 }: {
-  searchParams: Record<string, string>;
+  searchParams: Promise<Record<string, string>>;
 }) {
-  const params = new URLSearchParams({ ...searchParams, category: "vintage" });
+  const sp = await searchParams;
+  const params = new URLSearchParams({ ...sp, category: "vintage" });
   redirect(`/shop?${params.toString()}`);
 }

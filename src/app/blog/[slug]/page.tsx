@@ -6,11 +6,11 @@ import { createClient } from "@/lib/supabase/server";
 import type { BlogPost } from "@/types";
 
 interface Props {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 async function getPost(slug: string): Promise<BlogPost | null> {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data } = await supabase
     .from("blog_posts")
     .select("*")
@@ -21,7 +21,8 @@ async function getPost(slug: string): Promise<BlogPost | null> {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const post = await getPost(params.slug);
+  const { slug } = await params;
+  const post = await getPost(slug);
   if (!post) return {};
   return {
     title: post.title,
@@ -33,7 +34,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function BlogPostPage({ params }: Props) {
-  const post = await getPost(params.slug);
+  const { slug } = await params;
+  const post = await getPost(slug);
   if (!post) notFound();
 
   return (

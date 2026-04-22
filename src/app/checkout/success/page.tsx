@@ -1,18 +1,19 @@
 import Link from "next/link";
 import Button from "@/components/ui/Button";
 
-export default function CheckoutSuccessPage({
+export default async function CheckoutSuccessPage({
   searchParams,
 }: {
-  searchParams: { order?: string };
+  searchParams: Promise<{ order?: string }>;
 }) {
+  const sp = await searchParams;
   return (
     <div className="container-site py-24 text-center animate-fade-in">
       <div className="max-w-lg mx-auto">
         <p className="text-7xl mb-6">✦</p>
         <h1 className="font-display text-5xl text-burnt mb-4">Order Confirmed!</h1>
-        {searchParams.order && (
-          <p className="font-mono text-sm text-ink/50 mb-2">{searchParams.order}</p>
+        {sp.order && (
+          <p className="font-mono text-sm text-ink/50 mb-2">{sp.order}</p>
         )}
         <p className="font-serif italic text-ink/60 text-lg mb-6">
           Your magical piece is on its way. Check your email for a confirmation.

@@ -8,9 +8,10 @@ import type { Order } from "@/types";
 
 export const dynamic = "force-dynamic";
 
-export default async function OrderDetailPage({ params }: { params: { id: string } }) {
+export default async function OrderDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const supabase = createServiceClient();
-  const { data: order } = await supabase.from("orders").select("*").eq("id", params.id).single();
+  const { data: order } = await supabase.from("orders").select("*").eq("id", id).single();
   if (!order) notFound();
 
   const o = order as Order;
