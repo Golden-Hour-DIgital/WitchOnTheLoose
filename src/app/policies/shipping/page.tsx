@@ -16,7 +16,14 @@ export default function ShippingPolicyPage() {
         </section>
         <section>
           <h2 className="font-serif text-2xl text-ink mb-3">Shipping Rates</h2>
-          <p>Flat rate shipping of <strong>$8.00</strong> applies to all domestic (US) orders.</p>
+          <p>Shipping is calculated based on your order total:</p>
+          <ul className="list-disc pl-6 space-y-1 my-3">
+            <li>Orders under $50 — <strong>$8</strong></li>
+            <li>Orders $50 – $99.99 — <strong>$10</strong></li>
+            <li>Orders $100 – $199.99 — <strong>$12</strong></li>
+            <li>Orders $200+ — <strong>Free shipping</strong></li>
+          </ul>
+          <p>All orders ship from Huntingdon County, Pennsylvania via USPS Ground Advantage.</p>
           <p>International shipping is available — please contact me for rates before ordering.</p>
         </section>
         <section>

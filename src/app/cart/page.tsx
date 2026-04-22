@@ -5,13 +5,12 @@ import { useCart } from "@/lib/cart-context";
 import CartItemRow from "@/components/cart/CartItem";
 import Button from "@/components/ui/Button";
 import { formatPrice } from "@/lib/utils";
-
-const SHIPPING_FLAT = 8.00; // flat rate shipping
+import { calculateShipping } from "@/lib/shipping";
 
 export default function CartPage() {
   const { items, subtotal, clearCart } = useCart();
   const isEmpty = items.length === 0;
-  const shipping = isEmpty ? 0 : SHIPPING_FLAT;
+  const shipping = isEmpty ? 0 : calculateShipping(subtotal);
   const total = subtotal + shipping;
 
   return (

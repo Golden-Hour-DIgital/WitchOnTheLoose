@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/lib/cart-context";
 import { calculateTax } from "@/lib/tax";
+import { calculateShipping } from "@/lib/shipping";
 import { formatPrice } from "@/lib/utils";
 import Button from "@/components/ui/Button";
 import type { ShippingAddress } from "@/types";
@@ -20,8 +21,6 @@ declare global {
     };
   }
 }
-
-const SHIPPING_FLAT = 8.00;
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -42,7 +41,7 @@ export default function CheckoutPage() {
     country: "US",
   });
 
-  const shipping = SHIPPING_FLAT;
+  const shipping = calculateShipping(subtotal);
   const taxableItems = items.map((i) => ({
     price: i.product.price,
     is_taxable: i.product.is_taxable,

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/service";
 import { calculateTax } from "@/lib/tax";
+import { calculateShipping } from "@/lib/shipping";
 import { sendOrderConfirmation } from "@/lib/resend";
 
 function generateOrderNumber(): string {
@@ -64,7 +65,7 @@ export async function POST(req: NextRequest) {
 
     // 4. Recompute totals server-side — client-supplied numbers are never used
     const subtotal = products.reduce((sum, p) => sum + Number(p.price), 0);
-    const shipping = 8.0;
+    const shipping = calculateShipping(subtotal);
     const tax = calculateTax(
       products.map((p) => ({ price: Number(p.price), is_taxable: p.is_taxable })),
       shippingAddress.state
