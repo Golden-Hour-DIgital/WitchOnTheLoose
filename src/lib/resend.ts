@@ -2,7 +2,7 @@ import { Resend } from "resend";
 import { formatPrice } from "@/lib/utils";
 
 const getClient = () => new Resend(process.env.RESEND_API_KEY!);
-const FROM = "Witch on the Loose <orders@witchontheloose.com>";
+const FROM = "Witch on the Loose <orders@send.witchontheloose.com>";
 
 interface OrderConfirmationParams {
   to: string;
